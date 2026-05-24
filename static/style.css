@@ -1,0 +1,400 @@
+body {
+    margin: 0;
+    font-family: "Yu Gothic", "Meiryo", sans-serif;
+    background: #f3f5f7;
+    color: #1f2937;
+}
+
+a {
+    text-decoration: none;
+}
+
+.hero {
+    background: linear-gradient(135deg, #173b8f, #2563eb);
+    color: white;
+    padding: 56px 20px;
+}
+
+.hero-inner {
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.label {
+    font-size: 13px;
+    opacity: 0.85;
+    letter-spacing: 0.08em;
+}
+
+h1 {
+    margin: 8px 0;
+    font-size: 36px;
+}
+
+.lead {
+    margin-bottom: 24px;
+    font-size: 16px;
+    opacity: 0.95;
+}
+
+.search-box {
+    display: flex;
+    max-width: 720px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    padding: 16px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-box button {
+    border: none;
+    background: #111827;
+    color: white;
+    padding: 0 30px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.container {
+    max-width: 980px;
+    margin: 32px auto;
+    padding: 0 20px;
+}
+
+.focus-area {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 18px;
+    margin-bottom: 34px;
+}
+
+.main-topic {
+    background:
+        linear-gradient(90deg, rgba(5, 24, 72, 0.96) 0%, rgba(10, 42, 112, 0.82) 55%, rgba(10, 42, 112, 0.42) 100%),
+        url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1400&auto=format&fit=crop");
+    background-size: cover;
+    background-position: center;
+    border-radius: 16px;
+    padding: 36px;
+    color: white;
+    min-height: 280px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.16);
+}
+
+.topic-label {
+    display: inline-block;
+    background: #e11d48;
+    color: white;
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+    font-weight: bold;
+}
+
+.main-topic h2 {
+    font-size: 36px;
+    line-height: 1.35;
+    margin: 0 0 18px;
+}
+
+.main-topic h2 span {
+    color: #fde047;
+}
+
+.main-topic p {
+    max-width: 560px;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.main-link {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 11px 17px;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    background: rgba(255,255,255,0.08);
+}
+
+.side-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+.side-card h2 {
+    font-size: 18px;
+    margin: 0 0 18px;
+}
+
+.side-card a {
+    display: block;
+    color: #1e3a8a;
+    padding: 13px 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.section {
+    margin-bottom: 34px;
+}
+
+.section h2 {
+    font-size: 21px;
+    border-left: 5px solid #2563eb;
+    padding-left: 10px;
+    margin-bottom: 18px;
+}
+
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.topic-card {
+    background: white;
+    border-radius: 15px;
+    padding: 22px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    color: #1f2937;
+    transition: 0.2s;
+    border-top: 6px solid #2563eb;
+}
+
+.topic-card:hover {
+    transform: translateY(-2px);
+}
+
+.topic-1 {
+    border-top-color: #dc2626;
+}
+
+.topic-2 {
+    border-top-color: #2563eb;
+}
+
+.topic-3 {
+    border-top-color: #16a34a;
+}
+
+.topic-card strong {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: #173b8f;
+}
+
+.topic-1 strong {
+    color: #b91c1c;
+}
+
+.topic-2 strong {
+    color: #1d4ed8;
+}
+
+.topic-3 strong {
+    color: #15803d;
+}
+
+.topic-card span {
+    display: block;
+    line-height: 1.8;
+    color: #4b5563;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.topic-card em {
+    font-style: normal;
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 34px;
+}
+
+.panel {
+    background: white;
+    border-radius: 15px;
+    padding: 22px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+.panel h2 {
+    font-size: 18px;
+    margin: 0 0 16px;
+}
+
+.list-item {
+    display: block;
+    padding: 13px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.list-item strong {
+    display: block;
+    color: #173b8f;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.list-item span {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.schedule-item {
+    padding: 13px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.schedule-item strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.schedule-item span {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.result-count {
+    margin-bottom: 18px;
+    font-weight: bold;
+}
+
+.result-list {
+    display: grid;
+    gap: 16px;
+}
+
+.result-card {
+    background: white;
+    border-radius: 15px;
+    padding: 22px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+.meta {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.result-card h3 {
+    margin: 10px 0;
+    color: #111827;
+}
+
+.result-card p {
+    line-height: 1.9;
+}
+
+.empty {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    color: #6b7280;
+}
+
+@media (max-width: 900px) {
+    .focus-area,
+    .topic-grid,
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .main-topic {
+        padding: 28px;
+        min-height: auto;
+    }
+
+    .main-topic h2 {
+        font-size: 30px;
+    }
+
+    h1 {
+        font-size: 31px;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box button {
+        padding: 15px;
+    }
+}
+
+/* 微調整：全体幅・主役感・下段カード */
+.hero-inner,
+.container {
+    max-width: 1080px;
+}
+
+.main-topic {
+    min-height: 320px;
+    padding: 42px;
+}
+
+.main-topic h2 {
+    font-size: 40px;
+}
+
+.main-topic p {
+    font-size: 15.5px;
+}
+
+.focus-area {
+    grid-template-columns: 2.15fr 1fr;
+}
+
+.panel {
+    border-top: 5px solid #2563eb;
+}
+
+.panel:nth-child(2) {
+    border-top-color: #0ea5e9;
+}
+
+.panel:nth-child(3) {
+    border-top-color: #64748b;
+}
+
+.topic-card {
+    min-height: 120px;
+}
+
+@media (max-width: 900px) {
+    .hero-inner,
+    .container {
+        max-width: 100%;
+    }
+
+    .main-topic {
+        min-height: auto;
+        padding: 30px;
+    }
+
+    .main-topic h2 {
+        font-size: 31px;
+    }
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>埼玉県議会アーカイブ</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="hero">
+    <div class="hero-inner">
+        <p class="label">Saitama Assembly Archive</p>
+        <h1>埼玉県議会 検索ポータル</h1>
+        <p class="lead">議事録原文をもとに、県政の話題を検索・確認できます。</p>
+
+        <form method="get" class="search-box">
+            <input type="text" name="q" value="{{ keyword }}" placeholder="例：外国人、教育、予算、リコール">
+            <button type="submit">検索</button>
+        </form>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="focus-area">
+        <article class="main-topic">
+            <p class="topic-label">今の注目テーマ</p>
+            <h2>埼玉県知事リコール問題と<br><span>外国人政策の議論</span></h2>
+            <p>
+                リコール署名の大きな争点となっている外国人政策について、
+                県議会でどのような議論が行われてきたのか確認できます。
+            </p>
+            <a class="main-link" href="/?q=外国人">関連議事録を見る →</a>
+        </article>
+
+        <aside class="side-card">
+            <h2>関連する主な議事録テーマ</h2>
+            <a href="/?q=外国人">外国人・多文化共生</a>
+            <a href="/?q=治安">治安・安全対策</a>
+            <a href="/?q=教育">教育・日本語支援</a>
+            <a href="/?q=補助金">補助金・財政支援</a>
+        </aside>
+    </section>
+
+    <section class="section">
+        <h2>注目議題</h2>
+
+        <div class="topic-grid">
+            {% for topic in daily_topics[:3] %}
+            <a class="topic-card topic-{{ loop.index }}" href="/?q={{ topic.word }}">
+                <strong>{{ topic.word }}</strong>
+                <span>{{ topic.desc }}</span>
+                <em>関連議事録を見る →</em>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="content-grid">
+
+        <div class="panel">
+            <h2>最新の会議・議事録</h2>
+
+            {% if pickup_cards %}
+                {% for row in pickup_cards[:3] %}
+                <a class="list-item" href="/?q={{ row['title'] }}">
+                    <strong>{{ row["title"] }}</strong>
+                    <span>{{ row["date"] }} ｜ {{ row["speaker"] }}</span>
+                </a>
+                {% endfor %}
+            {% else %}
+                <p class="empty">最新議事録を準備中です。</p>
+            {% endif %}
+        </div>
+
+        <div class="panel">
+            <h2>関連ニュース</h2>
+
+            <a class="list-item" href="#" target="_blank">
+                <strong>産経新聞：埼玉県関連ニュース</strong>
+                <span>外部ニュース</span>
+            </a>
+
+            <a class="list-item" href="#" target="_blank">
+                <strong>Yahoo!ニュース：埼玉県関連</strong>
+                <span>外部ニュース</span>
+            </a>
+
+            <a class="list-item" href="#" target="_blank">
+                <strong>埼玉新聞：県政ニュース</strong>
+                <span>外部ニュース</span>
+            </a>
+        </div>
+
+        <div class="panel">
+            <h2>会議日程</h2>
+
+            <div class="schedule-item">
+                <strong>次回開催情報</strong>
+                <span>公式情報確認後に掲載</span>
+            </div>
+
+            <div class="schedule-item">
+                <strong>定例会・委員会</strong>
+                <span>議事録公開後に順次反映</span>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="section">
+        <h2>検索結果</h2>
+
+        {% if keyword %}
+        <p class="result-count">「{{ keyword }}」：{{ count }}件表示</p>
+        {% endif %}
+
+        {% if results %}
+        <div class="result-list">
+            {% for row in results %}
+            <article class="result-card">
+                <p class="meta">{{ row["date"] }} ｜ {{ row["title"] }}</p>
+                <h3>{{ row["speaker"] }}</h3>
+                <p>{{ row["content"] }}</p>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+            {% if keyword %}
+            <p class="empty">該当する発言はありません。</p>
+            {% else %}
+            <p class="empty">検索ワードを入力してください。</p>
+            {% endif %}
+        {% endif %}
+    </section>
+
+</main>
+
+</body>
+</html>
