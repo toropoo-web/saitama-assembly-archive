@@ -25,7 +25,7 @@ def search_speeches(keyword):
             speeches.speaker,
             speeches.content,
             meetings.date,
-            meetings.title
+           
         FROM speeches
         JOIN meetings ON speeches.meeting_id = meetings.id
         WHERE speeches.content LIKE ?
