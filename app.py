@@ -3,7 +3,7 @@ import sqlite3
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "data" / "saitama.db"
+DB_PATH = BASE_DIR / "saitama_gikai.db"
 
 app = Flask(
     __name__,
