@@ -10,11 +10,20 @@
 <header class="hero">
     <div class="hero-inner">
         <p class="label">Saitama Assembly Archive</p>
+
         <h1>埼玉県議会 検索ポータル</h1>
-        <p class="lead">議事録原文をもとに、県政の話題を検索・確認できます。</p>
+
+        <p class="lead">
+            議事録原文をもとに、県政の話題を検索・確認できます。
+        </p>
 
         <form method="get" class="search-box">
-            <input type="text" name="q" value="{{ keyword }}" placeholder="例：外国人、教育、予算、リコール">
+            <input
+                type="text"
+                name="q"
+                value="{{ keyword }}"
+                placeholder="例：外国人、教育、予算、リコール"
+            >
             <button type="submit">検索</button>
         </form>
     </div>
@@ -23,57 +32,107 @@
 <main class="container">
 
     <section class="focus-area">
+
         <article class="main-topic">
             <p class="topic-label">今の注目テーマ</p>
-            <h2>埼玉県知事リコール問題と<br><span>外国人政策の議論</span></h2>
+
+            <h2>
+                埼玉県知事リコール問題と<br>
+                <span>外国人政策の議論</span>
+            </h2>
+
             <p>
                 リコール署名の大きな争点となっている外国人政策について、
                 県議会でどのような議論が行われてきたのか確認できます。
             </p>
-            <a class="main-link" href="/?q=外国人#results">関連議事録を見る →</a>
+
+            <a class="main-link" href="/?q=外国人#results">
+                関連議事録を見る →
+            </a>
         </article>
 
         <aside class="side-card">
             <h2>関連する主な議事録テーマ</h2>
-            <a href="/?q=外国人#results">外国人・多文化共生</a>
-            <a href="/?q=治安#results">治安・安全対策</a>
-            <a href="/?q=教育#results">教育・日本語支援</a>
-            <a href="/?q=補助金#results">補助金・財政支援</a>
+
+            <a href="/?q=外国人#results">
+                外国人・多文化共生
+            </a>
+
+            <a href="/?q=治安#results">
+                治安・安全対策
+            </a>
+
+            <a href="/?q=教育#results">
+                教育・日本語支援
+            </a>
+
+            <a href="/?q=補助金#results">
+                補助金・財政支援
+            </a>
         </aside>
+
     </section>
 
-    <section class="section" id="results">
-    <h2>検索結果</h2>
+    <section class="section">
+
+        <h2>注目議題</h2>
 
         <div class="topic-grid">
+
             {% for topic in daily_topics[:3] %}
-            <a class="topic-card topic-{{ loop.index }}" href="/?q={{ topic.word }}">
+
+            <a
+                class="topic-card topic-{{ loop.index }}"
+                href="/?q={{ topic.word }}#results"
+            >
                 <strong>{{ topic.word }}</strong>
+
                 <span>{{ topic.desc }}</span>
+
                 <em>関連議事録を見る →</em>
             </a>
+
             {% endfor %}
+
         </div>
+
     </section>
 
     <section class="content-grid">
 
         <div class="panel">
+
             <h2>最新の会議・議事録</h2>
 
             {% if pickup_cards %}
+
                 {% for row in pickup_cards[:3] %}
-                <a class="list-item" href="/?q={{ row['title'] }}">
+
+                <a class="list-item" href="#">
+
                     <strong>{{ row["title"] }}</strong>
-                    <span>{{ row["date"] }} | {{ row["speaker"] }}</span>
+
+                    <span>
+                        {{ row["date"] }} |
+                        {{ row["speaker"] }}
+                    </span>
+
                 </a>
+
                 {% endfor %}
+
             {% else %}
-                <p class="empty">最新議事録を準備中です。</p>
+
+                <p class="empty">
+                    最新議事録を準備中です。
+                </p>
+
             {% endif %}
+
         </div>
 
         <div class="panel">
+
             <h2>関連ニュース</h2>
 
             <a class="list-item" href="#" target="_blank">
@@ -90,9 +149,11 @@
                 <strong>埼玉新聞：県政ニュース</strong>
                 <span>外部ニュース</span>
             </a>
+
         </div>
 
         <div class="panel">
+
             <h2>会議日程</h2>
 
             <div class="schedule-item">
@@ -104,38 +165,67 @@
                 <strong>定例会・委員会</strong>
                 <span>議事録公開後に順次反映</span>
             </div>
+
         </div>
 
     </section>
 
+    <div id="results"></div>
+
     <section class="section">
+
         <h2>検索結果</h2>
 
         {% if keyword %}
-        <p class="result-count">「{{ keyword }}」：{{ count }}件表示</p>
+
+        <p class="result-count">
+            「{{ keyword }}」：{{ count }}件表示
+        </p>
+
         {% endif %}
 
         {% if results %}
+
         <div class="result-list">
+
             {% for row in results %}
+
             <article class="result-card">
-    <p class="meta">
-        発言ID: {{ row["id"] }} | 会議ID: {{ row["meeting_id"] }}
-    </p>
 
-    <h3>{{ row["speaker"] }}</h3>
+                <p class="meta">
+                    発言ID: {{ row["id"] }}
+                    |
+                    会議ID: {{ row["meeting_id"] }}
+                </p>
 
-    <p>{{ row["body"] }}</p>
+                <h3>{{ row["speaker"] }}</h3>
+
+                <p>{{ row["body"] }}</p>
+
             </article>
+
             {% endfor %}
+
         </div>
+
         {% else %}
+
             {% if keyword %}
-            <p class="empty">該当する発言はありません。</p>
+
+            <p class="empty">
+                該当する発言はありません。
+            </p>
+
             {% else %}
-            <p class="empty">検索ワードを入力してください。</p>
+
+            <p class="empty">
+                検索ワードを入力してください。
+            </p>
+
             {% endif %}
+
         {% endif %}
+
     </section>
 
 </main>
