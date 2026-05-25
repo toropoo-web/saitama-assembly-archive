@@ -458,3 +458,11 @@ h1 {
     font-size: 14px;
     font-weight: 600;
 }
+
+mark {
+    background: #ffe066;
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: bold;
+}
