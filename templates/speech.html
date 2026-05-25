@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>議事録詳細</title>
+
+    <style>
+        body {
+            font-family: "Yu Gothic", "Meiryo", sans-serif;
+            background: #f4f6f8;
+            color: #222;
+            line-height: 1.9;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 28px;
+            border-radius: 12px;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .speaker {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .body {
+            white-space: pre-wrap;
+            font-size: 16px;
+        }
+
+        mark {
+            background: #ffe066;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            text-decoration: none;
+            color: #005bac;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a class="back" href="/?q={{ keyword }}">
+        ← 検索結果へ戻る
+    </a>
+
+    <div class="meta">
+        {{ row["meeting_date"] }}
+        /
+        {{ row["meeting_name"] }}
+    </div>
+
+    <div class="speaker">
+        {{ row["speaker"] }}
+    </div>
+
+    <div class="body">
+        {{ body|safe }}
+    </div>
+
+</div>
+
+<script>
+window.addEventListener("load", function () {
+    const firstMark = document.querySelector("mark");
+
+    if (firstMark) {
+        firstMark.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+});
+</script>
+
+</body>
+</html>

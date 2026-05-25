@@ -8,9 +8,7 @@
 <body>
 
 <header class="hero">
-
     <div class="hero-inner">
-
         <p class="label">Saitama Assembly Archive</p>
 
         <h1>
@@ -18,11 +16,11 @@
                 埼玉県議会 検索ポータル
             </a>
         </h1>
-            <p class="lead">
-                議事録原文をもとに、県政の話題を検索・確認できます。
-            </p>
-        </div>
 
+        <p class="lead">
+            議事録原文をもとに、県政の話題を検索・確認できます。
+        </p>
+    </div>
 
     <form method="get" class="search-box">
         <input type="text" name="q" value="{{ keyword }}" placeholder="例：外国人、教育、予算、リコール">
@@ -55,21 +53,10 @@
         <aside class="side-card">
             <h2>関連する主な議事録テーマ</h2>
 
-            <a href="/?q=外国人#results">
-                外国人・多文化共生
-            </a>
-
-            <a href="/?q=治安#results">
-                治安・安全対策
-            </a>
-
-            <a href="/?q=教育#results">
-                教育・日本語支援
-            </a>
-
-            <a href="/?q=補助金#results">
-                補助金・財政支援
-            </a>
+            <a href="/?q=外国人#results">外国人・多文化共生</a>
+            <a href="/?q=治安#results">治安・安全対策</a>
+            <a href="/?q=教育#results">教育・日本語支援</a>
+            <a href="/?q=補助金#results">補助金・財政支援</a>
         </aside>
 
     </section>
@@ -82,14 +69,9 @@
 
             {% for topic in daily_topics[:3] %}
 
-            <a
-                class="topic-card topic-{{ loop.index }}"
-                href="/?q={{ topic.word }}#results"
-            >
+            <a class="topic-card topic-{{ loop.index }}" href="/?q={{ topic.word }}#results">
                 <strong>{{ topic.word }}</strong>
-
                 <span>{{ topic.desc }}</span>
-
                 <em>関連議事録を見る →</em>
             </a>
 
@@ -102,7 +84,6 @@
     <section class="content-grid">
 
         <div class="panel">
-
             <h2>最新の会議・議事録</h2>
 
             {% if pickup_cards %}
@@ -110,30 +91,20 @@
                 {% for row in pickup_cards[:3] %}
 
                 <a class="list-item" href="#">
-
                     <strong>{{ row["title"] }}</strong>
-
-                    <span>
-                        {{ row["date"] }} |
-                        {{ row["speaker"] }}
-                    </span>
-
+                    <span>{{ row["date"] }} | {{ row["speaker"] }}</span>
                 </a>
 
                 {% endfor %}
 
             {% else %}
 
-                <p class="empty">
-                    最新議事録を準備中です。
-                </p>
+                <p class="empty">最新議事録を準備中です。</p>
 
             {% endif %}
-
         </div>
 
         <div class="panel">
-
             <h2>関連ニュース</h2>
 
             <a class="list-item" href="#" target="_blank">
@@ -150,11 +121,9 @@
                 <strong>埼玉新聞：県政ニュース</strong>
                 <span>外部ニュース</span>
             </a>
-
         </div>
 
         <div class="panel">
-
             <h2>会議日程</h2>
 
             <div class="schedule-item">
@@ -166,7 +135,6 @@
                 <strong>定例会・委員会</strong>
                 <span>議事録公開後に順次反映</span>
             </div>
-
         </div>
 
     </section>
@@ -177,15 +145,13 @@
 
         <h2>検索結果</h2>
 
-{% if keyword %}
-<div class="search-tags">
-    {% for word in keyword.split() %}
-        <span class="search-tag">{{ word }}</span>
-    {% endfor %}
-</div>
-{% endif %}
-
         {% if keyword %}
+
+        <div class="search-tags">
+            {% for word in keyword.split() %}
+                <span class="search-tag">{{ word }}</span>
+            {% endfor %}
+        </div>
 
         <p class="result-count">
             「{{ keyword }}」：{{ count }}件表示
@@ -202,26 +168,22 @@
             <article class="result-card">
 
                 <p class="meta">
-                    {{ row["meeting_date"] }}
-                    |
-                    {{ row["meeting_name"] }}
+                    {{ row["meeting_date"] }} | {{ row["meeting_name"] }}
                 </p>
 
                 <h3>{{ row["speaker"] }}</h3>
 
                 <div class="result-preview">
-    {{ row["snippet"]|safe }}{% if row["body"]|length > 250 %}…{% endif %}
- </div>
+                    {{ row["snippet"]|safe }}
+                </div>
 
- {% if row["body"]|length > 250 %}
- <details class="read-more">
-    <summary>続きを読む</summary>
+                {% if row["body"]|length > 250 %}
 
-    <div class="result-full">
-        {{ row["body"] }}
-    </div>
- </details>
- {% endif %}
+                <a class="read-more-link" href="{{ url_for('speech_detail', speech_id=row['id'], q=keyword) }}">
+                    続きを読む
+                </a>
+
+                {% endif %}
 
             </article>
 
@@ -232,17 +194,9 @@
         {% else %}
 
             {% if keyword %}
-
-            <p class="empty">
-                該当する発言はありません。
-            </p>
-
+                <p class="empty">該当する発言はありません。</p>
             {% else %}
-
-            <p class="empty">
-                検索ワードを入力してください。
-            </p>
-
+                <p class="empty">検索ワードを入力してください。</p>
             {% endif %}
 
         {% endif %}

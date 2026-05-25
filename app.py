@@ -11,7 +11,10 @@ app = Flask(
     template_folder=str(BASE_DIR / "templates"),
     static_folder=str(BASE_DIR / "static"),
 )
-
+def get_db_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 def search_speeches(keyword):
     if not keyword:
@@ -108,6 +111,46 @@ def index():
         pickup_cards=pickup_cards,
     )
 
+@app.route("/speech/<int:speech_id>")
+def speech_detail(speech_id):
+    keyword = request.args.get("q", "").strip()
 
+    conn = get_db_connection()
+
+    row = conn.execute("""
+        SELECT
+            speeches.id,
+            speeches.speaker,
+            speeches.body,
+            meetings.meeting_name,
+            meetings.meeting_date
+        FROM speeches
+        LEFT JOIN meetings
+            ON speeches.meeting_id = meetings.id
+        WHERE speeches.id = ?
+    """, (speech_id,)).fetchone()
+
+    conn.close()
+
+    if row is None:
+        return "Not Found", 404
+
+    body = row["body"]
+
+    if keyword:
+        words = keyword.split()
+
+        for word in words:
+            body = body.replace(
+                word,
+                f"<mark>{word}</mark>"
+            )
+
+    return render_template(
+        "speech.html",
+        row=row,
+        body=body,
+        keyword=keyword,
+)
 if __name__ == "__main__":
     app.run(debug=True)
