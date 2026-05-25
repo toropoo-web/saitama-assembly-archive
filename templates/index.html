@@ -119,9 +119,13 @@
         <div class="result-list">
             {% for row in results %}
             <article class="result-card">
-                <p class="meta">{{ row["date"] }} ｜ {{ row["title"] }}</p>
-                <h3>{{ row["speaker"] }}</h3>
-                <p>{{ row["content"] }}</p>
+    <p class="meta">
+        発言ID: {{ row["id"] }} | 会議ID: {{ row["meeting_id"] }}
+    </p>
+
+    <h3>{{ row["speaker"] }}</h3>
+
+    <p>{{ row["body"] }}</p>
             </article>
             {% endfor %}
         </div>
