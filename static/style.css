@@ -398,3 +398,42 @@ h1 {
         font-size: 31px;
     }
 }
+.result-preview {
+    line-height: 1.9;
+    color: #333;
+    font-size: 15px;
+    white-space: pre-wrap;
+}
+
+.read-more {
+    margin-top: 14px;
+}
+
+.read-more summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    list-style: none;
+}
+
+.read-more summary::-webkit-details-marker {
+    display: none;
+}
+
+.read-more summary::after {
+    content: " ▼";
+    font-size: 12px;
+}
+
+.read-more[open] summary::after {
+    content: " ▲";
+}
+
+.result-full {
+    margin-top: 14px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    color: #222;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 14px;
+}

@@ -200,7 +200,19 @@
 
                 <h3>{{ row["speaker"] }}</h3>
 
-                <p>{{ row["body"] }}</p>
+                <div class="result-preview">
+    {{ row["body"][:250] }}{% if row["body"]|length > 250 %}…{% endif %}
+ </div>
+
+ {% if row["body"]|length > 250 %}
+ <details class="read-more">
+    <summary>続きを読む</summary>
+
+    <div class="result-full">
+        {{ row["body"] }}
+    </div>
+ </details>
+ {% endif %}
 
             </article>
 
