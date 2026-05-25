@@ -19,28 +19,45 @@ def search_speeches(keyword):
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
-    cur.execute("""
-    SELECT
-        speeches.id,
-        speeches.meeting_id,
-        speeches.speaker,
-        speeches.body,
-        meetings.meeting_name,
-        meetings.meeting_date
+    words = keyword.split()
+    where_clauses = []
+    params = []
 
-    FROM speeches
+    for word in words:
+        where_clauses.append("""
+            (
+                speeches.body LIKE ?
+                OR speeches.speaker LIKE ?
+                OR meetings.meeting_name LIKE ?
+            )
+        """)
+        params.extend([f"%{word}%", f"%{word}%", f"%{word}%"])
 
-    LEFT JOIN meetings
-    ON speeches.meeting_id = meetings.id
+    where_sql = " AND ".join(where_clauses)
 
-    WHERE speeches.body LIKE ?
+    cur.execute(f"""
+        SELECT
+            speeches.id,
+            speeches.meeting_id,
+            speeches.speaker,
+            speeches.body,
+            meetings.meeting_name,
+            meetings.meeting_date
 
-    LIMIT 100
-""", (f"%{keyword}%",))
+        FROM speeches
 
-    rows = cur.fetchall()
+        LEFT JOIN meetings
+        ON speeches.meeting_id = meetings.id
+
+        WHERE {where_sql}
+
+        LIMIT 100
+    """, params)
+
+    results = cur.fetchall()
+
     conn.close()
-    return rows
+    return results
 
 @app.route("/", methods=["GET"])
 def index():
