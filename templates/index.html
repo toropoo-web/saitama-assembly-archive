@@ -202,7 +202,7 @@
                 <h3>{{ row["speaker"] }}</h3>
 
                 <div class="result-preview">
-    {{ row["body"][:250] }}{% if row["body"]|length > 250 %}…{% endif %}
+    {{ row["snippet"] }}{% if row["body"]|length > 250 %}…{% endif %}
  </div>
 
  {% if row["body"]|length > 250 %}
