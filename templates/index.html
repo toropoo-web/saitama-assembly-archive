@@ -177,6 +177,14 @@
 
         <h2>検索結果</h2>
 
+{% if keyword %}
+<div class="search-tags">
+    {% for word in keyword.split() %}
+        <span class="search-tag">{{ word }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+
         {% if keyword %}
 
         <p class="result-count">
