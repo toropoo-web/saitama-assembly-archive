@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request
-import sqlite3
 from pathlib import Path
+import sqlite3
+
+from flask import Flask, render_template, request
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "saitama_gikai.db"
@@ -8,8 +9,9 @@ DB_PATH = BASE_DIR / "saitama_gikai.db"
 app = Flask(
     __name__,
     template_folder=str(BASE_DIR / "templates"),
-    static_folder=str(BASE_DIR / "static")
+    static_folder=str(BASE_DIR / "static"),
 )
+
 
 def search_speeches(keyword):
     if not keyword:
@@ -54,10 +56,32 @@ def search_speeches(keyword):
         LIMIT 100
     """, params)
 
-    results = cur.fetchall()
+    rows = cur.fetchall()
+
+    results = []
+
+    for row in rows:
+        row = dict(row)
+        body = row["body"]
+        snippet = body[:250]
+
+        for word in words:
+            pos = body.find(word)
+            if pos != -1:
+                start = max(pos - 80, 0)
+                end = min(pos + 170, len(body))
+                snippet = body[start:end]
+                break
+
+        for word in words:
+            snippet = snippet.replace(word, f"<mark>{word}</mark>")
+
+        row["snippet"] = snippet
+        results.append(row)
 
     conn.close()
     return results
+
 
 @app.route("/", methods=["GET"])
 def index():
@@ -72,7 +96,7 @@ def index():
         {"word": "予算", "desc": "県政全体の議論と接続"},
     ]
 
-    pickup_cards = results[:3] if results else []
+    pickup_cards = []
 
     return render_template(
         "index.html",
@@ -81,8 +105,9 @@ def index():
         count=len(results),
         focus_words=focus_words,
         daily_topics=daily_topics,
-        pickup_cards=pickup_cards
+        pickup_cards=pickup_cards,
     )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
