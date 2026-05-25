@@ -30,20 +30,20 @@
                 リコール署名の大きな争点となっている外国人政策について、
                 県議会でどのような議論が行われてきたのか確認できます。
             </p>
-            <a class="main-link" href="/?q=外国人">関連議事録を見る →</a>
+            <a class="main-link" href="/?q=外国人#results">関連議事録を見る →</a>
         </article>
 
         <aside class="side-card">
             <h2>関連する主な議事録テーマ</h2>
-            <a href="/?q=外国人">外国人・多文化共生</a>
-            <a href="/?q=治安">治安・安全対策</a>
-            <a href="/?q=教育">教育・日本語支援</a>
-            <a href="/?q=補助金">補助金・財政支援</a>
+            <a href="/?q=外国人#results">外国人・多文化共生</a>
+            <a href="/?q=治安#results">治安・安全対策</a>
+            <a href="/?q=教育#results">教育・日本語支援</a>
+            <a href="/?q=補助金#results">補助金・財政支援</a>
         </aside>
     </section>
 
-    <section class="section">
-        <h2>注目議題</h2>
+    <section class="section" id="results">
+    <h2>検索結果</h2>
 
         <div class="topic-grid">
             {% for topic in daily_topics[:3] %}
@@ -65,7 +65,7 @@
                 {% for row in pickup_cards[:3] %}
                 <a class="list-item" href="/?q={{ row['title'] }}">
                     <strong>{{ row["title"] }}</strong>
-                    <span>{{ row["date"] }} ｜ {{ row["speaker"] }}</span>
+                    <span>{{ row["date"] }} | {{ row["speaker"] }}</span>
                 </a>
                 {% endfor %}
             {% else %}
