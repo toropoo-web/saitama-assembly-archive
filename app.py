@@ -22,10 +22,19 @@ def search_speeches(keyword):
     cur.execute("""
     SELECT
         speeches.id,
+        speeches.meeting_id,
         speeches.speaker,
-        speeches.body
+        speeches.body,
+        meetings.meeting_name,
+        meetings.meeting_date
+
     FROM speeches
+
+    LEFT JOIN meetings
+    ON speeches.meeting_id = meetings.id
+
     WHERE speeches.body LIKE ?
+
     LIMIT 100
 """, (f"%{keyword}%",))
 
