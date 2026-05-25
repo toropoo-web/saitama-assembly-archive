@@ -20,18 +20,17 @@ def search_speeches(keyword):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT
-            speeches.id,
-            speeches.speaker,
-            speeches.content,
-            meetings.date
-           
-        FROM speeches
-        JOIN meetings ON speeches.meeting_id = meetings.id
-        WHERE speeches.content LIKE ?
-        ORDER BY meetings.date DESC, speeches.id ASC
-        LIMIT 100
-    """, (f"%{keyword}%",))
+    SELECT
+        speeches.id,
+        speeches.speaker,
+        speeches.content,
+        meetings.date
+    FROM speeches
+    JOIN meetings ON speeches.meeting_id = meetings.id
+    WHERE speeches.content LIKE ?
+    ORDER BY meetings.date DESC, speeches.id ASC
+    LIMIT 100
+""", (f"%{keyword}%",))
 
     rows = cur.fetchall()
     conn.close()
