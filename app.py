@@ -12,31 +12,25 @@ app = Flask(
 )
 
 def search_speeches(keyword):
-
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-
-    cur.execute("PRAGMA table_info(speeches)")
-    print(cur.fetchall())
-
-    return []
+    if not keyword:
+        return []
 
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
-cur.execute("""
-    SELECT
-        speeches.id,
-        speeches.speaker,
-        speeches.body,
-        meetings.date
-    FROM speeches
-    JOIN meetings ON speeches.meeting_id = meetings.id
-    WHERE speeches.body LIKE ?
-    ORDER BY meetings.date DESC, speeches.id ASC
-    LIMIT 100
-""", (f"%{keyword}%",))
+    cur.execute("""
+        SELECT
+            speeches.id,
+            speeches.speaker,
+            speeches.body,
+            meetings.date
+        FROM speeches
+        JOIN meetings ON speeches.meeting_id = meetings.id
+        WHERE speeches.body LIKE ?
+        ORDER BY meetings.date DESC, speeches.id ASC
+        LIMIT 100
+    """, (f"%{keyword}%",))
 
     rows = cur.fetchall()
     conn.close()
