@@ -437,3 +437,8 @@ h1 {
     border-top: 1px solid #e5e7eb;
     padding-top: 14px;
 }
+.hero-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}

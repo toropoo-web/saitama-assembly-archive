@@ -8,25 +8,20 @@
 <body>
 
 <header class="hero">
-    <div class="hero-inner">
-        <p class="label">Saitama Assembly Archive</p>
+    <a href="/" class="hero-link">
+        <div class="hero-inner">
+            <p class="label">Saitama Assembly Archive</p>
+            <h1>埼玉県議会 検索ポータル</h1>
+            <p class="lead">
+                議事録原文をもとに、県政の話題を検索・確認できます。
+            </p>
+        </div>
+    </a>
 
-        <h1>埼玉県議会 検索ポータル</h1>
-
-        <p class="lead">
-            議事録原文をもとに、県政の話題を検索・確認できます。
-        </p>
-
-        <form method="get" class="search-box">
-            <input
-                type="text"
-                name="q"
-                value="{{ keyword }}"
-                placeholder="例：外国人、教育、予算、リコール"
-            >
-            <button type="submit">検索</button>
-        </form>
-    </div>
+    <form method="get" class="search-box">
+        <input type="text" name="q" value="{{ keyword }}" placeholder="例：外国人、教育、予算、リコール">
+        <button type="submit">検索</button>
+    </form>
 </header>
 
 <main class="container">
