@@ -22,7 +22,7 @@ def search_speeches(keyword):
     cur.execute("""
     SELECT
         speeches.id,
-        speeches.speaker_id,
+        speeches.speaker,
         speeches.body
     FROM speeches
     WHERE speeches.body LIKE ?
