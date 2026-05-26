@@ -4,7 +4,9 @@ body {
     background: #f3f5f7;
     color: #1f2937;
 }
-
+html {
+    overflow-y: scroll;
+}
 a {
     text-decoration: none;
 }
@@ -76,6 +78,7 @@ h1 {
 }
 
 .main-topic {
+    position: relative;
     background:
         linear-gradient(90deg, rgba(5, 24, 72, 0.96) 0%, rgba(10, 42, 112, 0.82) 55%, rgba(10, 42, 112, 0.42) 100%),
         url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1400&auto=format&fit=crop");
@@ -465,4 +468,223 @@ mark {
     padding: 2px 4px;
     border-radius: 4px;
     font-weight: bold;
+}
+.related-news-section {
+    margin-top: 40px;
+    padding: 24px;
+    background: #f8fafc;
+    border-radius: 14px;
+}
+
+.related-news-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+}
+
+.news-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.news-links a {
+    display: inline-block;
+    padding: 10px 14px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.news-links a:hover {
+    background: #eef2ff;
+}
+@media (max-width: 768px) {
+
+    .hero {
+        padding: 28px 16px;
+    }
+
+    .hero h1 {
+        font-size: 1.7rem;
+        line-height: 1.35;
+    }
+
+    .lead {
+        font-size: 0.95rem;
+    }
+
+    .search-box {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-box input,
+    .search-box button {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    .focus-area,
+    .content-grid,
+    .topic-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .main-topic {
+        padding: 24px;
+    }
+
+    .main-topic h2 {
+        font-size: 1.5rem;
+    }
+
+    .panel,
+    .result-card,
+    .topic-card {
+        padding: 18px;
+    }
+
+    .result-preview {
+        font-size: 0.95rem;
+        line-height: 1.8;
+    }
+
+    .read-more-link {
+        display: inline-block;
+        margin-top: 12px;
+        font-size: 0.95rem;
+    }
+}
+.empty-box {
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 14px;
+    margin-top: 20px;
+}
+
+.empty-box .news-links {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.empty-box .news-links a {
+    padding: 8px 14px;
+    background: #eef2ff;
+    border-radius: 999px;
+    color: #1d4ed8;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+.related-news-section .news-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.related-news-section .news-links a {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 999px;
+    color: #1d4ed8 !important;
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 1;
+}
+a:visited {
+    color: inherit;
+}
+
+.side-card a:visited,
+.main-link:visited,
+.topic-card a:visited {
+    color: inherit;
+}
+.slide-title-row {
+    position: relative;
+    margin-top: 8px;
+    padding: 0 46px;
+    display: block;
+    text-align: left;
+}
+
+.slide-title-row #slide-title {
+    display: inline-block;
+}
+
+.slide-arrow {
+    position: absolute;
+    top: 48%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.92);
+    color: #16367a;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.slide-arrow:first-child {
+    left: -18px;
+}
+
+.slide-arrow:last-child {
+    right: -18px;
+}
+
+.slide-arrow:hover {
+    background: #ffffff;
+}
+
+#slide-title {
+    transition: opacity 0.2s ease;
+}
+
+#slide-description {
+    transition: opacity 0.2s ease;
+}
+.schedule-box {
+    margin: 12px 0 20px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1px solid #dbe3ea;
+    border-left: 5px solid #2f6fdd;
+    border-radius: 10px;
+}
+
+.schedule-box p {
+    margin: 0 0 8px;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.schedule-box a {
+    display: inline-block;
+    margin-right: 12px;
+    color: #1d4ed8;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.schedule-box a:hover {
+    text-decoration: underline;
+    opacity: 0.7;
 }
