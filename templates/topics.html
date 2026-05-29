@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>テーマ一覧 | 埼玉県議会アーカイブ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="hero compact-hero">
+    <div class="hero-inner">
+        <p class="label">Topic Index</p>
+
+        <h1>
+            <a href="/" class="site-title">
+                テーマ別 議事録一覧
+            </a>
+        </h1>
+
+        <p class="lead">
+            教育、外国人政策、防災、予算など、県議会で扱われたテーマごとに原文を確認できます。
+        </p>
+
+        <form method="get" action="/" class="search-box">
+            <input type="text" name="q" placeholder="テーマや議員名で検索">
+            <button type="submit">検索</button>
+        </form>
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="topic-index-link">
+        <a href="/">トップへ戻る</a>
+    </div>
+
+    <section class="section">
+        <h2>テーマ一覧</h2>
+
+        <div class="topic-grid">
+
+            {% for topic in topics %}
+
+            <a class="topic-card"
+               href="/topics/{{ topic.slug }}">
+
+                <strong>{{ topic.name }}</strong>
+
+                <span>
+                    {{ topic.description }}
+                </span>
+
+                <em>
+                    関連発言：{{ topic.speech_count }} 件
+                </em>
+
+                <div class="topic-date">
+                    最終更新：{{ topic.latest_date or "確認中" }}
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ topic.name }} | 埼玉県議会アーカイブ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<main class="container">
+
+    <a class="back-link" href="/topics">← テーマ一覧へ戻る</a>
+
+    <section class="topic-detail-hero">
+        <p class="label">Topic Archive</p>
+        <h1>{{ topic.name }}</h1>
+
+        <p class="topic-description">
+            {{ topic.description }}
+        </p>
+
+        <div class="related-links topic-actions">
+            <a href="/?q={{ topic.name }}#results">{{ topic.name }}で全文検索</a>
+            <a href="/topics">他テーマを見る</a>
+            <a href="/">トップへ戻る</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>{{ topic.name }}に関連する議事録</h2>
+
+        <p class="result-count">
+            表示中：{{ speeches|length }} 件
+        </p>
+
+        {% if speeches %}
+        <div class="topic-speech-list">
+
+            {% for speech in speeches %}
+            <article class="topic-speech-card">
+
+                <div class="topic-speech-meta">
+                    <span>{{ speech.meeting_date }}</span>
+                    <span>{{ speech.meeting_name }}</span>
+                </div>
+
+                <h3 class="topic-speaker">
+                    {{ speech.speaker_name }}
+                </h3>
+
+                <div class="topic-snippet">
+                    {{ speech.snippet|safe }}...
+                </div>
+
+                <a class="read-more-link"
+                   href="{{ url_for('speech_detail', speech_id=speech.id, q=topic.name) }}">
+                    原文詳細を見る →
+                </a>
+
+            </article>
+            {% endfor %}
+
+        </div>
+        {% else %}
+        <div class="empty-box">
+            <p class="empty">
+                このテーマに関連する議事録はまだ登録されていません。
+            </p>
+        </div>
+        {% endif %}
+    </section>
+
+</main>
+
+</body>
+</html>

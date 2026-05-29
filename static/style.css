@@ -232,12 +232,18 @@ h1 {
 }
 
 .topic-card {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-height: 220px;
+
     padding: 24px;
     color: #1f2937;
     transition: 0.2s;
     border-top: 6px solid #2563eb;
 }
+
 
 .topic-card:hover,
 .hot-topic-card:hover {
@@ -276,6 +282,19 @@ h1 {
     color: #2563eb;
     font-weight: bold;
     font-size: 14px;
+}
+
+.topic-meta {
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.topic-speaker {
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #64748b;
 }
 
 .topic-date {

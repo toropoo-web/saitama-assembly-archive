@@ -351,21 +351,28 @@ def index():
         )
 
     daily_topics = [
-        {
-            "word": "外国人",
-            "slug": "foreigner",
-            "desc": get_topic_summary("外国人"),
-        },
-        {
-            "word": "教育",
-            "slug": "education",
-            "desc": get_topic_summary("教育"),
-        },
-        {
-            "word": "予算",
-            "slug": "budget",
-            "desc": get_topic_summary("予算"),
-        },
+    {
+        "word": "外国人",
+        "slug": "foreigner",
+        "desc": get_topic_summary("外国人"),
+        "count": get_topic_count("外国人"),
+        "speaker": get_topic_speaker("外国人"),
+    },
+    {
+        "word": "教育",
+        "slug": "education",
+        "desc": get_topic_summary("教育"),
+        "count": get_topic_count("教育"),
+        "speaker": get_topic_speaker("教育"),
+    },
+    {
+        "word": "予算",
+        "slug": "budget",
+        "desc": get_topic_summary("予算"),
+        "count": get_topic_count("予算"),
+        "speaker": get_topic_speaker("予算"),
+    },
+
     ]
 
     hot_topics = [

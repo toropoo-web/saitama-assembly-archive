@@ -156,11 +156,19 @@
 
             <a
                 class="topic-card topic-{{ loop.index }}"
-                href="/topics/{{ topic.slug }}">
+                href="/?q={{ topic.word }}#results">
 
                 <strong>
                     {{ topic.word }}
                 </strong>
+
+                <div class="topic-meta">
+                    関連議事録 {{ topic.count }}件
+                </div>
+
+                <div class="topic-speaker">
+                    主な発信者：{{ topic.speaker }}
+                </div>
 
                 <span>
                     {{ topic.desc }}
