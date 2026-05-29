@@ -3,105 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>議事録詳細</title>
-
-    <style>
-        body {
-            font-family: "Yu Gothic", "Meiryo", sans-serif;
-            background: #f4f6f8;
-            color: #222;
-            line-height: 1.9;
-            padding: 24px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 28px;
-            border-radius: 12px;
-        }
-
-        .meta {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .speaker {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .body {
-            white-space: pre-wrap;
-            font-size: 16px;
-        }
-
-        mark {
-            background: #ffe066;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-
-        .back {
-            display: inline-block;
-            margin-bottom: 24px;
-            text-decoration: none;
-            color: #005bac;
-        }
-        .related-news-section {
-    margin-top: 56px;
-    padding-top: 28px;
-    border-top: 3px solid #2563eb;
-}
-
-.related-news-section .news-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 16px;
-}
-
-.related-news-section .news-links a {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 14px;
-    background: #eef2ff;
-    border: 1px solid #c7d2fe;
-    border-radius: 999px;
-    color: #1d4ed8;
-    font-size: 0.95rem;
-    font-weight: bold;
-    text-decoration: none;
-    line-height: 1;
-}
-    </style>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<div class="container">
+<main class="detail-container">
 
-    <a class="back" href="/?q={{ keyword }}">
+    <a class="back-link" href="/?q={{ keyword }}#results">
         ← 検索結果へ戻る
     </a>
 
-    <div class="meta">
-        {{ row["meeting_date"] }}
-        /
-        {{ row["meeting_name"] }}
-    </div>
+    <article class="speech-detail-card">
 
-    <div class="speaker">
-        {{ row["speaker"] }}
-    </div>
+        <p class="meta">
+            {{ row["meeting_date"] }} / {{ row["meeting_name"] }}
+        </p>
 
-    <div class="body">
-        {{ highlighted_body|safe }}
-    </div>
+        <h1 class="detail-speaker">
+            {{ row["speaker_name"] }}
+        </h1>
 
-</div>
+        <div class="speech-body">
+            {{ highlighted_body|safe }}
+        </div>
+
+    </article>
+
+    {% if keyword %}
+    <section class="related-news-section">
+        <h2>このテーマの地域ニュースを見る</h2>
+
+        <div class="news-links">
+            <a href="https://news.yahoo.co.jp/search?p={{ news_query }}" target="_blank">
+                Yahooニュース
+            </a>
+
+            <a href="https://www.google.com/search?q={{ news_query }}&tbm=nws" target="_blank">
+                Googleニュース
+            </a>
+
+            <a href="https://www.saitama-np.co.jp/search?keyword={{ news_query }}" target="_blank">
+                埼玉新聞
+            </a>
+        </div>
+    </section>
+
+    
+    {% endif %}
+
+</main>
 
 <script>
 window.addEventListener("load", function () {
@@ -115,71 +65,6 @@ window.addEventListener("load", function () {
     }
 });
 </script>
-{% if keyword %}
-<section class="related-news-section">
 
-  <h2>このテーマの地域ニュースを見る</h2>
-
-  <div class="news-links">
-
-    <a href="https://news.yahoo.co.jp/search?p={{ news_query }}"
-       target="_blank">
-      Yahooニュース
-    </a>
-
-    <a href="https://www.google.com/search?q={{ news_query }}&tbm=nws"
-       target="_blank">
-      Googleニュース
-    </a>
-
-    <a href="https://www.saitama-np.co.jp/search?keyword={{ news_query }}"
-       target="_blank">
-      埼玉新聞
-    </a>
-
-  </div>
-
-</section>
-{% endif %}
-{% if keyword %}
-
-<section class="related-news-section">
-
-    <h2>関連する議題</h2>
-
-    <div class="news-links">
-
-        <a href="/?q=外国人#results">
-            外国人
-        </a>
-
-        <a href="/?q=教育#results">
-            教育
-        </a>
-
-        <a href="/?q=防災#results">
-            防災
-        </a>
-
-        <a href="/?q=補助金#results">
-            補助金
-        </a>
-        <a href="/?q=物価#results">
-            物価
-        </a>
-
-        <a href="/?q=子育て#results">
-            子育て
-        </a>
-
-        <a href="/?q=医療#results">
-            医療
-        </a>
-
-    </div>
-
-</section>
-
-{% endif %}
 </body>
 </html>

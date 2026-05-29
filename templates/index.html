@@ -8,8 +8,12 @@
 <body>
 
 <header class="hero">
+
     <div class="hero-inner">
-        <p class="label">Saitama Assembly Archive</p>
+
+        <p class="label">
+            Saitama Assembly Archive
+        </p>
 
         <h1>
             <a href="/" class="site-title">
@@ -20,156 +24,308 @@
         <p class="lead">
             議事録原文をもとに、県政の話題を検索・確認できます。
         </p>
+
+        <form
+            method="get"
+            action="/#results"
+            class="search-box">
+
+            <input
+                type="text"
+                name="q"
+                value="{{ keyword }}"
+                placeholder="例：外国人、教育、予算、防災">
+
+            <button type="submit">
+                検索
+            </button>
+
+        </form>
+
     </div>
 
-    <form method="get" class="search-box">
-        <input type="text" name="q" value="{{ keyword }}" placeholder="例：外国人、教育、予算、リコール">
-        <button type="submit">検索</button>
-    </form>
 </header>
 
 <main class="container">
 
     <section class="focus-area">
 
-    <article class="main-topic">
+        <article class="main-topic">
 
-    <div class="topic-label">
-        注目テーマ
-    </div>
+            <div class="topic-label">
+                注目テーマ
+            </div>
+
+            <h2>
+                埼玉県議会における<br>
+                <span id="slide-title">
+                    外国人政策関連の議事録
+                </span>
+            </h2>
+
+            <p id="slide-description">
+                外国人支援、多文化共生、日本語教育、治安、
+                医療・福祉負担など、埼玉県議会で議論されている
+                外国人政策関連の発言や議論を確認できます。
+            </p>
+
+            <div class="main-topic-actions">
+
+    <a
+        id="slide-link"
+        class="main-link"
+        href="/?q=外国人#results">
+
+        関連議事録を見る →
+
+            </a>
+
+        </div>
+
+        <hr style="
+            margin:24px 0;
+            border:none;
+            border-top:1px solid rgba(255,255,255,0.25);
+        ">
+
+        <a
+            class="hero-session-card"
+            href="/session/R8_2">
+
+                    <h3>
+                        令和8年2月定例会
+                    </h3>
+
+                    <p>
+                        質問者一覧・会議日程・議案など、
+                        最新会期の内容を確認できます。
+                    </p>
+
+                    <span>
+                        詳細を見る →
+                    </span>
+
+        </a>
+        </article>
+
+    <aside class="side-card">
 
     <h2>
-    埼玉県議会における<br>
-    <span id="slide-title">外国人政策関連の議事録</span>
+        次回会議日程
     </h2>
 
-    <p id="slide-description">
-        外国人支援、多文化共生、日本語教育、治安、医療・福祉負担など、
-        埼玉県議会で議論されている外国人政策関連の発言や議論を確認できます。
-    </p>
+        <div class="schedule-item">
+            <strong>
+                令和8年6月定例会（予定）
+            </strong>
 
-    <a id="slide-link" class="main-link" href="/?q=外国人#results">
-        関連議事録を見る →
-    </a>
+            <span>
+                開会日・代表質問日程は公開後に反映
+            </span>
+        </div>
 
-</article>
+        <hr>
 
-        <aside class="side-card">
-            <h2>関連する主な議事録テーマ</h2>
+        <p class="official-link-box">
+            委員会・議員名簿・定例会情報など<br>
+            公式情報はこちら
+        </p>
 
-            <a href="/?q=外国人#results">外国人・多文化共生</a>
-            <a href="/?q=治安#results">治安・安全対策</a>
-            <a href="/?q=教育#results">教育・日本語支援</a>
-            <a href="/?q=補助金#results">補助金・財政支援</a>
-        </aside>
+        <a
+            class="read-more-link"
+            href="https://www.pref.saitama.lg.jp/s-gikai/"
+            target="_blank">
+        埼玉県議会トップ →
+        </a>
+
+</aside>
+       
 
     </section>
 
+    
     <section class="section">
 
-        <h2>注目議題</h2>
+        <h2>
+            注目議題
+        </h2>
 
         <div class="topic-grid">
 
             {% for topic in daily_topics[:3] %}
 
-            <a class="topic-card topic-{{ loop.index }}" href="/?q={{ topic.word }}#results">
-                <strong>{{ topic.word }}</strong>
-                <span>{{ topic.desc }}</span>
-                <em>関連議事録を見る →</em>
+            <a
+                class="topic-card topic-{{ loop.index }}"
+                href="/topics/{{ topic.slug }}">
+
+                <strong>
+                    {{ topic.word }}
+                </strong>
+
+                <span>
+                    {{ topic.desc }}
+                </span>
+
+                <em>
+                    関連議事録を見る →
+                </em>
+
             </a>
 
             {% endfor %}
 
-        </div>
+    </div>
 
     </section>
-
-    <section class="content-grid">
-
-        <div class="panel">
-            <h2>最新の会議・議事録</h2>
-{% if latest_schedule %}
-<div class="schedule-box">
-
-    <p>
-        {{ latest_schedule["session_title"] }}
-    </p>
-
-    <a href="{{ latest_schedule['session_url'] }}" target="_blank">
-        定例会ページ →
-    </a>
-
-    {% if latest_schedule["schedule_url"] %}
-    <br>
-
-    <a href="{{ latest_schedule['schedule_url'] }}" target="_blank">
-        会期日程 →
-    </a>
-    {% endif %}
-
-</div>
-{% endif %}
-            {% if pickup_cards %}
-
-                {% for row in pickup_cards[:3] %}
-
-<a class="list-item" href="{{ url_for('speech_detail', speech_id=row['id']) }}">
-    <strong>{{ row["speaker"] }}</strong>
-    <span>{{ row["meeting_date"] }} | {{ row["speech_text"][:40] }}...</span>
-</a>
-
-{% endfor %}
-
-            {% else %}
-
-                <p class="empty">最新議事録を準備中です。</p>
-
-            {% endif %}
-        </div>
-
-        <div class="panel">
-    <h2>最近の地域話題</h2>
-
-    {% for label, query in top_news_topics %}
-
-    <a class="list-item"
-       href="https://news.yahoo.co.jp/search?p={{ query }}"
-       target="_blank">
-        <strong>{{ label }} 関連ニュース →</strong>
-        <span>外部ニュース検索</span>
-    </a>
-
-    {% endfor %}
-</div>
-
-        <div class="panel">
-            <h2>会議日程</h2>
-
-            {% for meeting in recent_meetings %}
-
-<div class="schedule-item">
-    <strong>{{ meeting["meeting_name"] }}</strong>
-    <span>{{ meeting["meeting_date"] }}</span>
-</div>
-
-     {% endfor %}
-        </div>
-
-    </section>
-
-    <div id="results"></div>
 
     <section class="section">
 
-        <h2>検索結果</h2>
+    <h2>発信者から探す</h2>
+
+        <p class="section-sub">
+        知事・議員・部局ごとの発言を確認できます
+        </p>
+
+    <div class="speaker-header">
+
+        <form method="get">
+
+        <select
+            name="speaker"
+            class="speaker-select"
+            onchange="this.form.submit()">
+
+            {% for speaker in speakers %}
+
+            <option
+                value="{{ speaker['speaker_name'] }}"
+                {% if speaker['speaker_name'] == featured_speaker %}
+                selected
+                {% endif %}
+            >
+                {{ speaker["speaker_name"] }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+        </form>
+
+    </div>
+
+    <div class="speaker-topic-grid">
+
+        {% for card in speaker_topic_cards %}
+
+        <a
+            href="{{ card.link }}"
+            class="speaker-topic-card">
+            <span class="speaker-name">
+                {{ featured_speaker }}
+            </span>
+
+            <strong>
+                {{ card.theme }}
+            </strong>
+
+            <p>
+                {{ card.snippet }}
+            </p>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<section class="local-news-section">
+    <h2>News</h2>
+
+    <div class="local-news-grid">
+
+        <div class="local-news-card">
+
+    <h3>Yahoo News</h3>
+
+    <ul>
+
+        {% for news in yahoo_news %}
+
+        <li>
+            <a href="{{ news.url }}" target="_blank">
+                {{ news.title }}
+            </a>
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+
+<div class="local-news-card">
+
+    <h3>Yahoo News Saitama</h3>
+
+    <ul>
+
+        {% for news in saitama_news %}
+
+        <li>
+            <a href="{{ news.url }}" target="_blank">
+                {{ news.title }}
+            </a>
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+
+    </div>
+</section>
+
+            
+    <div id="results"></div>
+
+        <section class="section">
+
+            <h2>
+                検索結果
+            </h2>
+
+            <form
+                method="get"
+                action="/#results"
+                class="search-box">
+
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ keyword }}"
+                    placeholder="例：外国人、教育、予算、防災">
+
+                <button type="submit">
+                    検索
+                </button>
+
+            </form>
 
         {% if keyword %}
 
         <div class="search-tags">
+
             {% for word in keyword.split() %}
-                <span class="search-tag">{{ word }}</span>
+
+            <span class="search-tag">
+                {{ word }}
+            </span>
+
             {% endfor %}
+
         </div>
 
         <p class="result-count">
@@ -187,22 +343,49 @@
             <article class="result-card">
 
                 <p class="meta">
-                    {{ row["meeting_date"] }} | {{ row["meeting_name"] }}
-                </p>
 
-                <h3>{{ row["speaker"] }}</h3>
+                    {% if row["session_name"] %}
+                        <span class="result-label result-label-quick">
+                            速報議事録
+                        </span>
+                    {% else %}
+                        <span class="result-label result-label-official">
+                            正式議事録
+                        </span>
+                    {% endif %}
+
+                    <span class="result-date">
+                        {{ row["meeting_date"] }}
+                    </span>
+
+                    <span class="result-meeting">
+                        {{ row["meeting_name"] }}
+                    </span>
+
+                </p>
+                <h3>
+                    {{ row["speaker_name"] }}
+                </h3>
+
+                {% if row["topic_title"] %}
+                <p class="result-topic">
+                    {{ row["topic_title"] }}
+                </p>
+                {% endif %}
+
+                <div class="result-preview">
 
                 <div class="result-preview">
                     {{ row["snippet"]|safe }}
                 </div>
 
-                {% if row["body"]|length > 250 %}
+                <a
+                    class="read-more-link"
+                    href="{{ url_for('speech_detail', speech_id=row['id'], q=keyword) }}">
 
-                <a class="read-more-link" href="{{ url_for('speech_detail', speech_id=row['id'], q=keyword) }}">
-                    続きを読む
+                    続きを読む →
+
                 </a>
-
-                {% endif %}
 
             </article>
 
@@ -213,22 +396,41 @@
         {% else %}
 
             {% if keyword %}
-                <div class="empty-box">
 
-    <p class="empty">
-        「{{ keyword }}」に該当する発言は見つかりませんでした。
-    </p>
+            <div class="empty-box">
 
-    <div class="news-links">
-        <a href="/?q=外国人#results">外国人</a>
-        <a href="/?q=教育#results">教育</a>
-        <a href="/?q=防災#results">防災</a>
-        <a href="/?q=予算#results">予算</a>
-    </div>
+                <p class="empty">
+                    「{{ keyword }}」に該当する発言は見つかりませんでした。
+                </p>
 
-</div>
+                <div class="news-links">
+
+                    <a href="/?q=外国人#results">
+                        外国人
+                    </a>
+
+                    <a href="/?q=教育#results">
+                        教育
+                    </a>
+
+                    <a href="/?q=防災#results">
+                        防災
+                    </a>
+
+                    <a href="/?q=予算#results">
+                        予算
+                    </a>
+
+                </div>
+
+            </div>
+
             {% else %}
-                <p class="empty">検索ワードを入力してください。</p>
+
+            <p class="empty">
+                検索ワードを入力してください。
+            </p>
+
             {% endif %}
 
         {% endif %}
@@ -236,23 +438,38 @@
     </section>
 
 </main>
+
 <script>
+
 const themes = [
+
     {
         title: "外国人政策関連の議事録",
-        description: "外国人支援、多文化共生、日本語教育、治安、医療・福祉負担など、埼玉県議会で議論されている外国人政策関連の発言や議論を確認できます。",
+
+        description:
+            "外国人支援、多文化共生、日本語教育、治安、医療・福祉負担など、埼玉県議会で議論されている外国人政策関連の発言や議論を確認できます。",
+
         link: "/?q=外国人#results"
     },
+
     {
         title: "教育・子育て関連の議事録",
-        description: "学校現場の負担、教員不足、不登校、給食、ICT教育、子育て支援など、教育と子どもをめぐる議論を確認できます。",
+
+        description:
+            "学校現場の負担、教員不足、不登校、給食、ICT教育、子育て支援など、教育と子どもをめぐる議論を確認できます。",
+
         link: "/?q=教育#results"
     },
+
     {
         title: "予算・財政関連の議事録",
-        description: "県の予算、補助金、事業費、財政支援など、税金の使われ方に関する議論を確認できます。",
+
+        description:
+            "県の予算、補助金、事業費、財政支援など、税金の使われ方に関する議論を確認できます。",
+
         link: "/?q=予算#results"
     }
+
 ];
 
 const dayIndex = new Date().getDay() % themes.length;
@@ -261,6 +478,8 @@ const theme = themes[dayIndex];
 document.getElementById("slide-title").textContent = theme.title;
 document.getElementById("slide-description").textContent = theme.description;
 document.getElementById("slide-link").href = theme.link;
+
 </script>
+
 </body>
 </html>

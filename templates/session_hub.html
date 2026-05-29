@@ -1,0 +1,109 @@
+<!--
+【埼玉モデル後期Memo｜R8_2完成時点】
+
+R8_2定例会ページは完成形の基準。
+
+構造：
+TOP Hero
+↓
+/session/<session_name>
+↓
+議員別アコーディオン
+↓
+質問一覧
+↓
+本文詳細
+
+役割：
+検索ページではなく、最新会期の専用入口。
+
+検索：
+TOP検索は R7_12 + R8_2 など全会期横断。
+
+運用：
+新しい定例会追加時は個別HTMLを作らない。
+meetings / speeches に session_name を付与し、
+session_hub.html を共通利用する。
+
+Heroリンクだけ最新会期へ差し替える。
+
+横展開：
+福岡県議会など他自治体でも、
+この「埼玉モデル」を基準に開始する。
+-->
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>令和8年2月定例会 | 埼玉県議会アーカイブ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<main class="container">
+
+    <h1>令和8年2月定例会</h1>
+    <section class="session-intro">
+
+    <p>
+        令和8年2月定例会における代表質問・一般質問を掲載しています。
+        議員名をクリックすると質問一覧を表示できます。
+    </p>
+
+</section>
+    <p>
+        <a class="back-link" href="/">← トップへ戻る</a>
+    </p>
+
+    {% if speakers %}
+
+    <section class="session-speaker-list">
+
+        {% for speaker, speeches in speakers.items() %}
+
+        <article class="session-speech-card">
+
+            <details class="session-speaker-accordion">
+
+                <summary class="session-speaker">
+                    {{ speaker }}
+                    <span>（{{ speeches|length }}件）</span>
+                </summary>
+
+                <ul class="session-topic-list">
+
+                    {% for row in speeches %}
+
+                    <li>
+                        <a href="{{ url_for('speech_detail', speech_id=row.speech_id) }}">
+                            {{ row.topic_title }}
+                        </a>
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </details>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+    {% else %}
+
+    <div class="empty-box">
+        <p class="empty">
+            この会議にはまだ登録された発言はありません。
+        </p>
+    </div>
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>
