@@ -641,7 +641,7 @@ def sitemap():
 
     conn.close()
 
-    base_url = "https://あなたのドメイン"
+    base_url = "base_url = "https://saitama-assembly-archive.onrender.com""
 
     urls = []
 
@@ -698,7 +698,7 @@ def robots():
     txt = """User-agent: *
 Allow: /
 
-Sitemap: https://あなたのドメイン/sitemap.xml
+Sitemap: base_url = "https://saitama-assembly-archive.onrender.com"
 """
 
     return Response(
