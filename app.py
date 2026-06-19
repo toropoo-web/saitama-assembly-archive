@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import sqlite3
 import feedparser
 
@@ -11,6 +12,8 @@ from flask import (
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "saitama_gikai.db"
+RAW_MINUTE_ID_OFFSET = 1_000_000_000
+SEARCH_RESULT_LIMIT = 500
 
 app = Flask(
     __name__,
@@ -43,6 +46,24 @@ def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def table_exists(conn, table_name):
+    row = conn.execute("""
+        SELECT 1
+        FROM sqlite_master
+        WHERE type = 'table'
+        AND name = ?
+    """, (table_name,)).fetchone()
+
+    return row is not None
+
+
+def topic_tables_available(conn):
+    return (
+        table_exists(conn, "topics")
+        and table_exists(conn, "speech_topics")
+    )
 
 
 def highlight_words(text, words):
@@ -86,6 +107,46 @@ def make_snippet(
     return highlight_words(
         text[:default_len],
         words
+    )
+
+
+def search_result_sort_key(row):
+    year = row["sort_year"] or 0
+    date_text = " ".join([
+        str(row.get("meeting_date") or ""),
+        str(row.get("meeting_name") or ""),
+    ])
+
+    iso_date = re.search(
+        r"(\d{4})-(\d{1,2})-(\d{1,2})",
+        date_text,
+    )
+
+    if iso_date:
+        year = int(iso_date.group(1))
+        month = int(iso_date.group(2))
+        day = int(iso_date.group(3))
+    else:
+        japanese_date = re.search(
+            r"(\d{1,2})月(\d{1,2})日",
+            date_text,
+        )
+        month = (
+            int(japanese_date.group(1))
+            if japanese_date
+            else 0
+        )
+        day = (
+            int(japanese_date.group(2))
+            if japanese_date
+            else 0
+        )
+
+    return (
+        year,
+        month,
+        day,
+        row["sort_id"] or 0,
     )
 
 
@@ -215,12 +276,14 @@ def search_speeches(keyword):
 
     words = keyword.split()
 
-    where_clauses = []
-    params = []
+    speech_where_clauses = []
+    speech_params = []
+    raw_where_clauses = []
+    raw_params = []
 
     for word in words:
 
-        where_clauses.append("""
+        speech_where_clauses.append("""
             (
                 speeches.speech_text LIKE ?
                 OR speeches.speaker_name LIKE ?
@@ -228,17 +291,38 @@ def search_speeches(keyword):
             )
         """)
 
-        params.extend([
+        speech_params.extend([
             f"%{word}%",
             f"%{word}%",
             f"%{word}%",
         ])
 
-    where_sql = " AND ".join(where_clauses)
+        raw_where_clauses.append("""
+            (
+                raw_minutes.snippet LIKE ?
+                OR raw_minutes.title LIKE ?
+                OR raw_minutes.schedule_name LIKE ?
+                OR raw_minutes.session_name LIKE ?
+            )
+        """)
+
+        raw_params.extend([
+            f"%{word}%",
+            f"%{word}%",
+            f"%{word}%",
+            f"%{word}%",
+        ])
+
+    speech_where_sql = " AND ".join(
+        speech_where_clauses
+    )
+    raw_where_sql = " AND ".join(
+        raw_where_clauses
+    )
 
     conn = get_db_connection()
 
-    rows = conn.execute(f"""
+    speech_rows = conn.execute(f"""
         SELECT
             speeches.id,
             speeches.meeting_id,
@@ -247,23 +331,51 @@ def search_speeches(keyword):
             speeches.speech_text,
             meetings.meeting_name,
             meetings.meeting_date,
-            meetings.session_name
+            meetings.session_name,
+            CASE meetings.session_name
+                WHEN 'R8_2' THEN 2026
+                WHEN 'R7_12' THEN 2025
+                ELSE CAST(
+                    substr(meetings.meeting_date, 1, 4)
+                    AS INTEGER
+                )
+            END AS sort_year,
+            speeches.id AS sort_id
         FROM speeches
         LEFT JOIN meetings
             ON speeches.meeting_id = meetings.id
-        WHERE {where_sql}
-        ORDER BY speeches.id DESC
-        LIMIT 100
-        """, params).fetchall()
+        WHERE {speech_where_sql}
+        """, speech_params).fetchall()
 
-    print(where_sql)
-    print(params)
+    raw_rows = conn.execute(f"""
+        SELECT
+            ? + raw_minutes.id AS id,
+            NULL AS meeting_id,
+            raw_minutes.title AS speaker_name,
+            NULL AS topic_title,
+            raw_minutes.snippet AS speech_text,
+            raw_minutes.schedule_name AS meeting_name,
+            raw_minutes.view_year || '年'
+                AS meeting_date,
+            NULL AS session_name,
+            CAST(raw_minutes.view_year AS INTEGER)
+                AS sort_year,
+            raw_minutes.id AS sort_id
+        FROM raw_minutes
+        WHERE {raw_where_sql}
+        """, [
+            RAW_MINUTE_ID_OFFSET,
+            *raw_params,
+        ]).fetchall()
 
     conn.close()
 
     results = []
 
-    for row in rows:
+    for row in [
+        *speech_rows,
+        *raw_rows,
+    ]:
 
         row = dict(row)
 
@@ -274,7 +386,12 @@ def search_speeches(keyword):
 
         results.append(row)
 
-    return results
+    results.sort(
+        key=search_result_sort_key,
+        reverse=True,
+    )
+
+    return results[:SEARCH_RESULT_LIMIT]
 
 def get_speakers():
 
@@ -444,18 +561,40 @@ def speech_detail(speech_id):
 
     conn = get_db_connection()
 
-    row = conn.execute("""
-        SELECT
-            speeches.id,
-            speeches.speaker_name,
-            speeches.speech_text,
-            meetings.meeting_name,
-            meetings.meeting_date
-        FROM speeches
-        LEFT JOIN meetings
-            ON speeches.meeting_id = meetings.id
-        WHERE speeches.id = ?
-    """, (speech_id,)).fetchone()
+    if speech_id >= RAW_MINUTE_ID_OFFSET:
+        raw_minute_id = (
+            speech_id - RAW_MINUTE_ID_OFFSET
+        )
+
+        row = conn.execute("""
+            SELECT
+                ? + raw_minutes.id AS id,
+                raw_minutes.title AS speaker_name,
+                raw_minutes.snippet AS speech_text,
+                raw_minutes.schedule_name
+                    AS meeting_name,
+                raw_minutes.view_year || '年'
+                    AS meeting_date
+            FROM raw_minutes
+            WHERE raw_minutes.id = ?
+        """, (
+            RAW_MINUTE_ID_OFFSET,
+            raw_minute_id,
+        )).fetchone()
+
+    else:
+        row = conn.execute("""
+            SELECT
+                speeches.id,
+                speeches.speaker_name,
+                speeches.speech_text,
+                meetings.meeting_name,
+                meetings.meeting_date
+            FROM speeches
+            LEFT JOIN meetings
+                ON speeches.meeting_id = meetings.id
+            WHERE speeches.id = ?
+        """, (speech_id,)).fetchone()
 
     conn.close()
 
@@ -483,26 +622,29 @@ def topics_index():
 
     conn = get_db_connection()
 
-    topics = conn.execute("""
-        SELECT
-            topics.id,
-            topics.slug,
-            topics.name,
-            topics.description,
-            COUNT(speech_topics.speech_id)
-                AS speech_count,
-            MAX(meetings.meeting_date)
-                AS latest_date
-        FROM topics
-        LEFT JOIN speech_topics
-            ON topics.id = speech_topics.topic_id
-        LEFT JOIN speeches
-            ON speech_topics.speech_id = speeches.id
-        LEFT JOIN meetings
-            ON speeches.meeting_id = meetings.id
-        GROUP BY topics.id
-        ORDER BY speech_count DESC
-    """).fetchall()
+    topics = []
+
+    if topic_tables_available(conn):
+        topics = conn.execute("""
+            SELECT
+                topics.id,
+                topics.slug,
+                topics.name,
+                topics.description,
+                COUNT(speech_topics.speech_id)
+                    AS speech_count,
+                MAX(meetings.meeting_date)
+                    AS latest_date
+            FROM topics
+            LEFT JOIN speech_topics
+                ON topics.id = speech_topics.topic_id
+            LEFT JOIN speeches
+                ON speech_topics.speech_id = speeches.id
+            LEFT JOIN meetings
+                ON speeches.meeting_id = meetings.id
+            GROUP BY topics.id
+            ORDER BY speech_count DESC
+        """).fetchall()
 
     conn.close()
 
@@ -516,6 +658,10 @@ def topics_index():
 def topic_detail(slug):
 
     conn = get_db_connection()
+
+    if not topic_tables_available(conn):
+        conn.close()
+        return "Topic archive is not available", 404
 
     topic = conn.execute("""
         SELECT *
@@ -633,11 +779,14 @@ def sitemap():
         LIMIT 5000
     """).fetchall()
 
-    topics = conn.execute("""
-        SELECT slug
-        FROM topics
-        ORDER BY id ASC
-    """).fetchall()
+    topics = []
+
+    if table_exists(conn, "topics"):
+        topics = conn.execute("""
+            SELECT slug
+            FROM topics
+            ORDER BY id ASC
+        """).fetchall()
 
     conn.close()
 
