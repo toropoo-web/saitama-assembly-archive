@@ -27,6 +27,12 @@
             {{ highlighted_body|safe }}
         </div>
 
+        {% if source_url %}
+        <p>
+            <a class="read-more-link" href="{{ source_url }}" target="_blank" rel="noopener noreferrer">埼玉県議会公式原文を見る</a>
+        </p>
+        {% endif %}
+
     </article>
 
     {% if keyword %}

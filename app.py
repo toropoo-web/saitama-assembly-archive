@@ -1,6 +1,7 @@
 from pathlib import Path
 import re
 import sqlite3
+from urllib.parse import urlencode
 import feedparser
 
 from flask import (
@@ -14,6 +15,25 @@ BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "saitama_gikai.db"
 RAW_MINUTE_ID_OFFSET = 1_000_000_000
 SEARCH_RESULT_LIMIT = 500
+
+
+def build_layer1_source_url(council_id, schedule_id, minute_id):
+    values = (council_id, schedule_id, minute_id)
+    if not all(str(value or "").strip() for value in values):
+        return None
+
+    query = urlencode(
+        {
+            "council_id": council_id,
+            "schedule_id": schedule_id,
+            "minute_id": minute_id,
+            "is_search": "true",
+        }
+    )
+    return (
+        "https://ssp.kaigiroku.net/tenant/prefsaitama/"
+        f"MinuteView.html?{query}"
+    )
 
 app = Flask(
     __name__,
@@ -560,6 +580,7 @@ def speech_detail(speech_id):
     )
 
     conn = get_db_connection()
+    source_url = None
 
     if speech_id >= RAW_MINUTE_ID_OFFSET:
         raw_minute_id = (
@@ -574,7 +595,10 @@ def speech_detail(speech_id):
                 raw_minutes.schedule_name
                     AS meeting_name,
                 raw_minutes.view_year || '年'
-                    AS meeting_date
+                    AS meeting_date,
+                raw_minutes.council_id,
+                raw_minutes.schedule_id,
+                raw_minutes.minute_id
             FROM raw_minutes
             WHERE raw_minutes.id = ?
         """, (
@@ -582,12 +606,20 @@ def speech_detail(speech_id):
             raw_minute_id,
         )).fetchone()
 
+        if row is not None:
+            source_url = build_layer1_source_url(
+                row["council_id"],
+                row["schedule_id"],
+                row["minute_id"],
+            )
+
     else:
         row = conn.execute("""
             SELECT
                 speeches.id,
                 speeches.speaker_name,
                 speeches.speech_text,
+                speeches.transcript_url,
                 meetings.meeting_name,
                 meetings.meeting_date
             FROM speeches
@@ -595,6 +627,12 @@ def speech_detail(speech_id):
                 ON speeches.meeting_id = meetings.id
             WHERE speeches.id = ?
         """, (speech_id,)).fetchone()
+
+        if row is not None:
+            source_url = (
+                (row["transcript_url"] or "").strip()
+                or None
+            )
 
     conn.close()
 
@@ -614,6 +652,7 @@ def speech_detail(speech_id):
         highlighted_body=highlighted_body,
         keyword=keyword,
         news_query=news_query,
+        source_url=source_url,
     )
 
 
